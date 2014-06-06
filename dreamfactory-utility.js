@@ -72,20 +72,23 @@ angular.module('dfUtility', [])
         return {
             restrict: 'E',
             scope: {
-                allowedVerbs: '=?'
+                allowedVerbs: '=?',
+                description: '=?'
             },
             templateUrl: DF_UTILITY_ASSET_PATH + 'views/verb-picker.html',
             link: function (scope, elem, attrs) {
 
                 scope.verbs = {
-                    GET: {name: 'GET', active: false},
-                    POST: {name: 'POST', active: false},
-                    PUT: {name: 'PUT', active: false},
-                    PATCH: {name: 'PATCH', active: false},
-                    DELETE: {name: 'DELETE', active: false}
+                    GET: {name: 'GET', active: false, description: ' (read)'},
+                    POST: {name: 'POST', active: false, description: ' (create)'},
+                    PUT: {name: 'PUT', active: false, description: ' (replace)'},
+                    PATCH: {name: 'PATCH', active: false, description: ' (update)'},
+                    MERGE: {name: 'MERGE', active: false, description: ' (update)'},
+                    DELETE: {name: 'DELETE', active: false, description: ' (remove)'}
                 };
 
                 scope. btnText = '';
+                scope.description = true;
 
                 scope._setVerbState = function (nameStr, stateBool) {
 
@@ -145,6 +148,8 @@ angular.module('dfUtility', [])
                 };
 
                 scope.$watch('allowedVerbs', function (newValue, oldValue) {
+
+                    console.log(newValue);
 
                     if (!newValue) return false;
 
