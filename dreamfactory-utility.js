@@ -88,7 +88,7 @@ angular.module('dfUtility', [])
                 };
 
 
-                scope. btnText = '';
+                scope. btnText = 'None Selected';
                 scope.description = true;
 
                 scope._setVerbState = function (nameStr, stateBool) {
