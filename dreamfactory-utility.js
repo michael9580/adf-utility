@@ -87,6 +87,7 @@ angular.module('dfUtility', [])
                     DELETE: {name: 'DELETE', active: false, description: ' (remove)'}
                 };
 
+
                 scope. btnText = '';
                 scope.description = true;
 
@@ -149,8 +150,6 @@ angular.module('dfUtility', [])
 
                 scope.$watch('allowedVerbs', function (newValue, oldValue) {
 
-                    console.log(newValue);
-
                     if (!newValue) return false;
 
                     angular.forEach(scope.allowedVerbs, function (_value, _index) {
@@ -160,6 +159,11 @@ angular.module('dfUtility', [])
 
                     scope._setButtonText();
                 })
+
+                elem.css({
+                    'display': 'inline-block'
+                })
+
             }
         }
     }])
@@ -301,5 +305,25 @@ angular.module('dfUtility', [])
             });
 
             return filtered;
+        }
+    }])
+    .filter('dfOrderExplicit', [function() {
+
+        return function(items, order) {
+
+            var filtered = [],
+                i = 0;
+
+            angular.forEach(items, function(value, index) {
+
+                if (value.name === order[i]) {
+                    filtered.push(value)
+
+                }
+                i++;
+            })
+
+            return filtered;
+
         }
     }]);
