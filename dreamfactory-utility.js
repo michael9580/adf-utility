@@ -3,6 +3,7 @@
 
 
 angular.module('dfUtility', [])
+    .constant('DF_UTILITY_ASSET_PATH', 'admin_components/dreamfactory-utility/')
     .directive('dreamfactoryAutoHeight', ['$window', '$route', function ($window) {
 
         return {
@@ -63,6 +64,97 @@ angular.module('dfUtility', [])
 
 
 
+            }
+        }
+    }])
+    .directive('dfVerbPicker', ['DF_UTILITY_ASSET_PATH', function (DF_UTILITY_ASSET_PATH) {
+
+        return {
+            restrict: 'E',
+            scope: {
+                allowedVerbs: '=?'
+            },
+            templateUrl: DF_UTILITY_ASSET_PATH + 'views/verb-picker.html',
+            link: function (scope, elem, attrs) {
+
+                scope.verbs = {
+                    GET: {name: 'GET', active: false},
+                    POST: {name: 'POST', active: false},
+                    PUT: {name: 'PUT', active: false},
+                    PATCH: {name: 'PATCH', active: false},
+                    DELETE: {name: 'DELETE', active: false}
+                };
+
+                scope. btnText = '';
+
+                scope._setVerbState = function (nameStr, stateBool) {
+
+                    var verb = scope.verbs[nameStr];
+                    if (scope.verbs.hasOwnProperty(verb.name)) {
+                        scope.verbs[verb.name].active = stateBool;
+                    }
+                };
+
+                scope._toggleVerbState = function (nameStr, event) {
+
+                    event.stopPropagation();
+
+                    if (scope.verbs.hasOwnProperty(scope.verbs[nameStr].name)) {
+                        scope.verbs[nameStr].active = !scope.verbs[nameStr].active;
+                    }
+
+                    scope.allowedVerbs = [];
+
+                    angular.forEach(scope.verbs, function (_obj) {
+                        if (_obj.active) {
+                            scope.allowedVerbs.push(_obj.name);
+                        }
+                    });
+                };
+
+                scope._isVerbActive = function (verbStr) {
+
+                    return scope.verbs[verbStr].active
+                };
+
+                scope._setButtonText = function () {
+
+                    var verbs = scope.allowedVerbs;
+
+                    scope.btnText = '';
+
+                    if (verbs.length == 0) {
+                        scope.btnText = 'None Selected';
+
+                    }else if (verbs.length > 0 &&  verbs.length <= 3) {
+
+
+                        angular.forEach(verbs, function (_value, _index) {
+                            if (scope._isVerbActive(_value)) {
+                                if (_index != verbs.length -1)
+                                scope.btnText += (_value + ', ');
+                                else {
+                                    scope.btnText += _value
+                                }
+                            }
+                        })
+
+                    }else if (verbs.length > 3) {
+                        scope.btnText = verbs.length + ' Selected';
+                    }
+                };
+
+                scope.$watch('allowedVerbs', function (newValue, oldValue) {
+
+                    if (!newValue) return false;
+
+                    angular.forEach(scope.allowedVerbs, function (_value, _index) {
+
+                        scope._setVerbState(_value, true);
+                    });
+
+                    scope._setButtonText();
+                })
             }
         }
     }])
@@ -170,6 +262,11 @@ angular.module('dfUtility', [])
     }])
     .filter('dfFilterBy', [function () {
         return function (items, options) {
+
+
+            console.log(items);
+            if (!options.on) return items;
+
 
             var filtered = [];
 
