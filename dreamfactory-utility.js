@@ -87,7 +87,6 @@ angular.module('dfUtility', [])
                     DELETE: {name: 'DELETE', active: false, description: ' (remove)'}
                 };
 
-
                 scope. btnText = 'None Selected';
                 scope.description = true;
 

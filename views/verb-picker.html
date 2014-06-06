@@ -8,7 +8,7 @@
             <a class="list-group-item" ng-click="_toggleVerbState(verb.name, $event)" data-ng-repeat="verb in verbs | dfOrderExplicit:['GET', 'POST', 'PUT', 'PATCH', 'MERGE', 'DELETE']">
                 <div class="checkbox" style="margin-top: 0; margin-bottom: 0;">
                     <label>
-                        <input type="checkbox" data-ng-checked="verb.active" >
+                        <input type="checkbox" data-ng-model="verb.active" data-ng-checked="verb.active" >
                         <span style="font-size: 14px;"> {{verb.name}} </span>
                         <span data-ng-if="description" style="font-size: 12px;">{{verb.description}}</span>
                     </label>
