@@ -166,6 +166,82 @@ angular.module('dfUtility', [])
             }
         }
     }])
+    .directive('dfServicePicker', ['DF_UTILITY_ASSET_PATH', 'DSP_URL', '$http', function(DF_UTILITY_ASSET_PATH, DSP_URL, $http) {
+
+        return {
+            restrict: 'E',
+            scope:{
+                services: '=?',
+                selected: '=?'
+            },
+            templateUrl: DF_UTILITY_ASSET_PATH + 'views/df-service-picker.html',
+            link: function(scope, elem, attrs) {
+
+
+                scope.resources = [];
+                scope.activeResource = null;
+                scope.activeService = null;
+
+
+                // PUBLIC API
+                scope.setServiceAndResource = function() {
+
+                    if (scope._checkForActive()) {
+                        scope._setServiceAndResource();
+                    }
+                };
+
+
+                // PRIVATE API
+                scope._getResources = function() {
+                    return $http({
+                        method:'GET',
+                        url: DSP_URL + '/rest/' + scope.activeService
+                    })
+                };
+
+
+                // COMPLEX IMPLEMENTATION
+                scope._setServiceAndResource = function() {
+                    scope.selected = {
+                        service: scope.activeService,
+                        resource: scope.activeResource
+                    };
+                };
+
+                scope._checkForActive = function () {
+
+                    return !!scope.activeResource && scope.activeService;
+                };
+
+
+                // WATCHERS AND INIT
+                scope.$watch('activeService', function (newValue, oldValue) {
+
+                    if (!newValue) return false;
+
+                    scope._getResources().then(
+                        function(result) {
+
+                            scope.resources = result.data.resource;
+                        },
+
+                        function(reject) {
+                            throw {
+                                module: 'DreamFactory Utility Module',
+                                type: 'error',
+                                provider: 'dreamfactory',
+                                exception: reject
+                            }
+                        }
+                    )
+                });
+
+
+                // MESSAGES
+            }
+        }
+    }])
     .service('dfObjectService', [function () {
 
         return {
